@@ -22,24 +22,18 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
             case 1:
                 //DB Views
                 return new fragment_database_view();
-            case 2:
 
-                break;
-            case 3:
-                //Edit Stock
-                break;
-            case 4:
-                //Edit Medication
-                break;
-            case 5:
-                //Edit Clinic
-                break;
+            case 2:
+                //Edit Database
+                return new fragment_edit_stock();
+
+
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }

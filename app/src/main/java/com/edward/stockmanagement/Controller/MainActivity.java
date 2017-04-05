@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity
             Setpage(1);
 
         } else if (id == R.id.nav_edit) {
+            Setpage(2);
 
         }  else if (id == R.id.nav_send) {
 
@@ -168,19 +169,19 @@ public class MainActivity extends AppCompatActivity
                 Log.d("MESSAGE", message);
             }
 
-
-            warnings_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    db = new DataBaseHandler(get_M_Context());
-                    STOCK stock1 =  db.get_stock(i+1);
-                    Global_Variables.setWarning_stock(stock1);
-                    int[] db_test = db.clinic_record_set(stock1.getS_clinic());
-                    warning_item_view_dialog warning_dialog = new warning_item_view_dialog();
-                    warning_dialog.show(fragmentManager,String.valueOf(stock1.getS_clinic()));
-
-                }
-            });
+//TODO FIX ON ITEM CLICK LISTNER BY ADDING INDEX IN LIST TO CORRECT DB ENRTRY
+//            warnings_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                    db = new DataBaseHandler(get_M_Context());
+//                    STOCK stock1 =  db.get_stock(i+1);
+//                    Global_Variables.setWarning_stock(stock1);
+//                    int[] db_test = db.clinic_record_set(stock1.getS_clinic());
+//                    warning_item_view_dialog warning_dialog = new warning_item_view_dialog();
+//                    warning_dialog.show(fragmentManager,String.valueOf(stock1.getS_clinic()));
+//
+//                }
+//            });
         }
         if (warnings_list_items.size() == 0){
             String message = "No Stock Issues";
