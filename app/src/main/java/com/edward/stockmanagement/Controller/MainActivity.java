@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +17,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.edward.stockmanagement.DATABASE.DB_INIT;
 import com.edward.stockmanagement.DATABASE.DataBaseHandler;
+import com.edward.stockmanagement.GLOBAL.Global_Variables;
 import com.edward.stockmanagement.OBJECTS.CLINIC;
 import com.edward.stockmanagement.OBJECTS.MEDICATION;
 import com.edward.stockmanagement.OBJECTS.STOCK;
 import com.edward.stockmanagement.R;
 import com.edward.stockmanagement.VIEWS.Stock_Pager_Adapter;
+import com.edward.stockmanagement.VIEWS.warning_item_view_dialog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,6 +37,7 @@ import java.util.concurrent.RunnableFuture;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     public static Context m_Context;
     private Handler app_handler = new Handler();
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity
             DB_INIT db_init = new DB_INIT();
             db_init.init();
         }
-
+        fragmentManager = getSupportFragmentManager();
 
     }
 
@@ -118,16 +123,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_data_view) {
-            // Handle the camera action
-        } else if (id == R.id.nav_add) {
-
-        } else if (id == R.id.nav_remove) {
+            Setpage(1);
 
         } else if (id == R.id.nav_edit) {
 
-        } else if (id == R.id.licensing) {
-
-        } else if (id == R.id.nav_send) {
+        }  else if (id == R.id.nav_send) {
 
         }
 
@@ -148,11 +148,14 @@ public class MainActivity extends AppCompatActivity
         app_handler.postDelayed(stock_mTimer,30000);
         //Update Warnings every 30 Seconds
     }
-
+    private static  DataBaseHandler db;
+    private static FragmentManager fragmentManager;
     public static void check_stock(){
-        DataBaseHandler db = new DataBaseHandler(get_M_Context());
+        db = new DataBaseHandler(get_M_Context());
         int stock_count = db.get_stock_count();
         warnings_list_items.clear();
+        int [] warning_list_array = new int[stock_count];
+        int warning_count = 0;
         for (int i = 0; i < stock_count;i++){
             STOCK stock = db.get_stock(i + 1);
             if (stock.getS_stock_count() < 5 ){
@@ -160,17 +163,30 @@ public class MainActivity extends AppCompatActivity
                 MEDICATION medication = db.get_medication(stock.getS_medication());
                 String message = clinic.getC_name() + " is low on " + medication.getM_name() + " stock left : " + stock.getS_stock_count();
                 warnings_list_items.add(message);
-
-//TODO Ad to LIST
+                warning_list_array[warning_count] = stock.getS_id();
+                warning_count++;
                 Log.d("MESSAGE", message);
             }
-            if (warnings_list_items.size() == 0){
-                String message = "No Stock Issues";
-                warnings_list_items.add(message);
-            }
-            warnings_list_adapter.notifyDataSetChanged();
 
+
+            warnings_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    db = new DataBaseHandler(get_M_Context());
+                    STOCK stock1 =  db.get_stock(i+1);
+                    Global_Variables.setWarning_stock(stock1);
+                    int[] db_test = db.clinic_record_set(stock1.getS_clinic());
+                    warning_item_view_dialog warning_dialog = new warning_item_view_dialog();
+                    warning_dialog.show(fragmentManager,String.valueOf(stock1.getS_clinic()));
+
+                }
+            });
         }
+        if (warnings_list_items.size() == 0){
+            String message = "No Stock Issues";
+            warnings_list_items.add(message);
+        }
+        warnings_list_adapter.notifyDataSetChanged();
         db.close();
     }
     @Override

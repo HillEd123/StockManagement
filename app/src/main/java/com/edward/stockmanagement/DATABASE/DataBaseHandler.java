@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.edward.stockmanagement.GLOBAL.Global_Variables;
 import com.edward.stockmanagement.OBJECTS.CLINIC;
 import com.edward.stockmanagement.OBJECTS.MEDICATION;
 import com.edward.stockmanagement.OBJECTS.STOCK;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Edward on 2017/04/04.
@@ -224,6 +227,32 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public static boolean doesDatabaseExist(Context context) {
         File dbFile = context.getDatabasePath(DATABASE_NAME);
         return dbFile.exists();
+    }
+
+    public int[] clinic_record_set(int id){
+
+      String Query_Clinic_Stock = "SELECT * FROM " + TABLE_STOCK + " WHERE " + KEY_STOCK_CLINIC + "=?";
+       db = sqlRead;
+        int[] records = new int[0];
+        int cursor_count = 0;
+        Cursor cursor = db.rawQuery(Query_Clinic_Stock,new String[]{String.valueOf(id)});
+        if (cursor !=null){
+            records = new int[cursor.getCount()];
+            if (cursor.moveToFirst()){
+                do{
+                    records[cursor_count] = cursor.getInt(0);
+                    cursor_count++;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        for (int i = 0; i < records.length;i++) {
+
+            Log.d("CURSOR", String.valueOf(records[i]));
+
+        }
+        Global_Variables.setWarning_stock_id(records);
+        return records;
     }
 
 }

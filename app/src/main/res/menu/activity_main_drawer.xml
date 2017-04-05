@@ -15,16 +15,7 @@
         <item
             android:id="@+id/nav_edit"
             android:icon="@drawable/database_edit"
-            android:title="Edit Records" />
-        <item
-            android:id="@+id/nav_add"
-            android:icon="@drawable/database_add"
-            android:title="Add Clinics or Items" />
-        <item
-            android:id="@+id/nav_remove"
-            android:icon="@drawable/database_remove"
-            android:title="Remove Clicnics or Items" />
-
+            android:title="Edit DataBase Entries" />
     </menu>
 </item>
 
@@ -36,8 +27,6 @@
                 android:title="Email Report" />
         </menu>
     </item>
-    <item android:id="@+id/licensing"
-        android:icon="@drawable/ic_menu_manage"
-        android:title="Licensing" />
+
 
 </menu>

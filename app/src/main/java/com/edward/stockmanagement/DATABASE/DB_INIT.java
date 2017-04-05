@@ -60,11 +60,11 @@ public class DB_INIT {
 
         for (int i = 0;i <10;i++){
             for (int k = 0;k < 3;k++){
-                STOCK s = new STOCK();
-                s.setS_clinic(i+1);
-                s.setS_medication(k+1);
-                s.setS_stock_count(5);
-                db.add_stock(s);
+                STOCK stock = new STOCK();
+                stock.setS_clinic(i+1);
+                stock.setS_medication(k+1);
+                stock.setS_stock_count(5);
+                db.add_stock(stock);
             }
         }
         for (int j = 0;j < 30;j++ ){

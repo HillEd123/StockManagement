@@ -20,10 +20,10 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
                 return new fragment_warnings();
 
             case 1:
-                //Less 5
-                break;
+                //DB Views
+                return new fragment_database_view();
             case 2:
-                //DB complete
+
                 break;
             case 3:
                 //Edit Stock
@@ -40,6 +40,6 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return 2;
     }
 }
