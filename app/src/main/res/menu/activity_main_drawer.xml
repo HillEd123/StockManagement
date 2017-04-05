@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_data_view"
+            android:icon="@drawable/database"
+            android:title="Database View" />
+
+
+</group>
+
+<item android:title="Edit Database">
+    <menu >
+        <item
+            android:id="@+id/nav_edit"
+            android:icon="@drawable/database_edit"
+            android:title="Edit Records" />
+        <item
+            android:id="@+id/nav_add"
+            android:icon="@drawable/database_add"
+            android:title="Add Clinics or Items" />
+        <item
+            android:id="@+id/nav_remove"
+            android:icon="@drawable/database_remove"
+            android:title="Remove Clicnics or Items" />
+
+    </menu>
+</item>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Email Report" />
+        </menu>
+    </item>
+    <item android:id="@+id/licensing"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="Licensing" />
+
+</menu>
