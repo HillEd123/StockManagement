@@ -70,8 +70,7 @@ public class fragment_database_view extends Fragment {
         int stock_count = db.get_stock_count();
         data_list_items.clear();
         int clinic_number = 0;
-        int [] warning_list_array = new int[stock_count];
-        int warning_count = 0;
+
         for (int i = 1; i < stock_count + 1;i++){
             STOCK stock = db.get_stock(i);
             if (stock.getS_stock_count() < 5 ){
