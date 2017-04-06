@@ -1,11 +1,13 @@
 package com.edward.stockmanagement.VIEWS;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -108,7 +110,12 @@ public class fragment_edit_stock_refactor extends Fragment {
                             updated_stock.setS_stock_count(int_update);
                             db.update_stock(updated_stock);
                             stock_medication_edit_layout.removeAllViews();
-
+                            InputMethodManager inputManager =
+                                    (InputMethodManager) MainActivity.get_M_Context().
+                                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputManager.hideSoftInputFromWindow(
+                                    fragment_edit_stock_refactor.this.getActivity().getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
                         }
                     }
                 });
