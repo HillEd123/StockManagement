@@ -15,6 +15,7 @@ import com.edward.stockmanagement.OBJECTS.STOCK;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Edward on 2017/04/04.
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class DataBaseHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "StockManagement_Mezzanine_Ware";
     //Tables
     private static final String TABLE_CLINIC = "table_clinic";
@@ -32,15 +33,18 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CLINIC_ID = "id";
     private static final String KEY_CLINIC_NAME = "name";
     private static final String KEY_CLINIC_COUNTRY = "country";
+    private static final String KEY_CLINIC_UUID = "uuid";
 
     //TABLE MEDS
     private static final String KEY_MEDS_ID = "id";
     private static final String KEY_MEDS_NAME = "name";
-
+    private static final String KEY_MEDS_UUID = "uuid";
     //TABLE_STOCK
     private static final String KEY_STOCK_ID = "id";
-    private static final String KEY_STOCK_CLINIC = "clinic_number";
-    private static final String KEY_STOCK_MEDICATION = "medication_number";
+    private static final String KEY_STOCK_CLINIC = "clinic";
+    private static final String KEY_STOCK_MEDICATION = "medication";
+    private static final String KEY_STOCK_CLINIC_UUID = "clinic_uuid";
+    private static final String KEY_STOCK_MEDICATION_UUID = "medication_uuid";
     private static final String KEY_STOCK_COUNT = "count";
 
 
@@ -52,19 +56,26 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_CLINIC = "CREATE TABLE " + TABLE_CLINIC + "(" +
             KEY_CLINIC_ID + " INTEGER PRIMARY KEY, " +
             KEY_CLINIC_NAME + " TEXT, " +
-            KEY_CLINIC_COUNTRY + " TEXT" + ")";
+            KEY_CLINIC_COUNTRY + " TEXT, " +
+            KEY_CLINIC_UUID + " TEXT" +
+            ")";
 
     private static final String CREATE_TABLE_MEDS = "CREATE TABLE " + TABLE_MEDS + "(" +
             KEY_MEDS_ID + " INTEGER PRIMARY KEY, " +
-            KEY_MEDS_NAME + " TEXT" + ")";
+            KEY_MEDS_NAME + " TEXT , " +
+            KEY_MEDS_UUID + " TEXT" +
+            ")";
 
     private static final String CREATE_TABLE_STOCK = "CREATE TABLE " + TABLE_STOCK + "(" +
             KEY_STOCK_ID + " INTEGER PRIMARY KEY, " +
             KEY_STOCK_CLINIC + " INTEGER, "+
             KEY_STOCK_MEDICATION + " INTEGER, "+
+            KEY_STOCK_CLINIC_UUID + " TEXT, " +
+            KEY_STOCK_MEDICATION_UUID + " TEXT, " +
             KEY_STOCK_COUNT + " INTEGER, " +
-            "FOREIGN KEY (" + KEY_STOCK_CLINIC + ") REFERENCES " + TABLE_CLINIC + "(" + KEY_CLINIC_ID + ") ," +
-            "FOREIGN KEY (" + KEY_STOCK_MEDICATION + ") REFERENCES " + TABLE_MEDS + "(" + KEY_MEDS_ID + ") "
+
+            "FOREIGN KEY (" + KEY_STOCK_CLINIC_UUID + ") REFERENCES " + TABLE_CLINIC + "(" + KEY_CLINIC_UUID + ") ," +
+            "FOREIGN KEY (" + KEY_STOCK_MEDICATION_UUID + ") REFERENCES " + TABLE_MEDS + "(" + KEY_MEDS_UUID + ") "
             +")";
 
 
@@ -92,6 +103,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_CLINIC_NAME, clinic.getC_name());
         values.put(KEY_CLINIC_COUNTRY,clinic.getC_country());
+        values.put(KEY_CLINIC_UUID,clinic.getC_uuid());
         db.insert(TABLE_CLINIC,null,values);
 
     }
@@ -100,6 +112,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db = sqlWrite;
         ContentValues values = new ContentValues();
         values.put(KEY_MEDS_NAME,medication.getM_name());
+        values.put(KEY_MEDS_UUID,medication.getM_uuid());
         db.insert(TABLE_MEDS,null,values);
     }
 
@@ -108,6 +121,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_STOCK_CLINIC,stock.getS_clinic());
         values.put(KEY_STOCK_MEDICATION,stock.getS_medication());
+        values.put(KEY_STOCK_CLINIC_UUID,stock.getS_clinic_uuid());
+        values.put(KEY_STOCK_MEDICATION_UUID,stock.getS_medication_uuid());
         values.put(KEY_STOCK_COUNT,stock.getS_stock_count());
         db.insert(TABLE_STOCK,null,values);
     }
@@ -115,43 +130,47 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public CLINIC get_clinic(int id){
         db = sqlRead;
         CLINIC clinic = new CLINIC();
-        Cursor cursor = db.query(TABLE_CLINIC, new String[]{KEY_CLINIC_ID,KEY_CLINIC_NAME,KEY_CLINIC_COUNTRY},KEY_CLINIC_ID + "=?",
+        Cursor cursor = db.query(TABLE_CLINIC, new String[]{KEY_CLINIC_ID,KEY_CLINIC_NAME,KEY_CLINIC_COUNTRY,KEY_CLINIC_UUID},KEY_CLINIC_ID + "=?",
                 new String[] {String.valueOf(id)},null,null,null);
-        if (cursor != null){
-            cursor.moveToFirst();
-        }
+        if (cursor != null && cursor.moveToFirst()){
+
+
         clinic.setC_id(cursor.getInt(0));
         clinic.setC_name(cursor.getString(1));
         clinic.setC_country(cursor.getString(2));
-        cursor.close();
+        clinic.setC_uuid(cursor.getString(3));
+        cursor.close();}
         return clinic;
     }
 
     public MEDICATION get_medication(int id){
         db = sqlRead;
         MEDICATION medication = new MEDICATION();
-        Cursor cursor = db.query(TABLE_MEDS, new String[]{KEY_MEDS_ID,KEY_MEDS_NAME},KEY_MEDS_ID + "=?",new String[] {String.valueOf(id)},null,null,null);
-        if (cursor != null){
-            cursor.moveToFirst();
-        }
+        Cursor cursor = db.query(TABLE_MEDS, new String[]{KEY_MEDS_ID,KEY_MEDS_NAME,KEY_MEDS_UUID},KEY_MEDS_ID + "=?",new String[] {String.valueOf(id)},null,null,null);
+        if (cursor != null && cursor.moveToFirst()){
+
+
         medication.setM_id(cursor.getInt(0));
         medication.setM_name(cursor.getString(1));
-        cursor.close();
+        medication.setM_uuid(cursor.getString(2));
+        cursor.close();}
         return medication;
     }
 
    public STOCK get_stock(int id){
         db = sqlRead;
         STOCK stock = new STOCK();
-        Cursor cursor = db.query(TABLE_STOCK,new String[]{KEY_STOCK_ID,KEY_STOCK_CLINIC,KEY_STOCK_MEDICATION,KEY_STOCK_COUNT},KEY_STOCK_ID + "=?",new String[] {String.valueOf(id)},null,null,null);
-       if (cursor != null){
-           cursor.moveToFirst();
-       }
+        Cursor cursor = db.query(TABLE_STOCK,new String[]{KEY_STOCK_ID,KEY_STOCK_CLINIC,KEY_STOCK_MEDICATION,KEY_STOCK_CLINIC_UUID,KEY_STOCK_MEDICATION_UUID,KEY_STOCK_COUNT},KEY_STOCK_ID + "=?",new String[] {String.valueOf(id)},null,null,null);
+       if (cursor != null && cursor.moveToFirst()){
+
+
        stock.setS_id(cursor.getInt(0));
        stock.setS_clinic(cursor.getInt(1));
        stock.setS_medication(cursor.getInt(2));
-       stock.setS_stock_count(cursor.getInt(3));
-       cursor.close();
+       stock.setS_clinic_uuid(cursor.getString(3));
+       stock.setS_medication_uuid(cursor.getString(4));
+       stock.setS_stock_count(cursor.getInt(5));
+       cursor.close();}
        return stock;
    }
 
@@ -182,9 +201,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
        return db.update(TABLE_STOCK,values,KEY_STOCK_ID +"=?",new String[]{String.valueOf(_id)});
    }
 
-   public void delete_clinic(CLINIC clinic){
+   public void delete_clinic(int id){
+
        db = sqlWrite;
-       db.delete(TABLE_CLINIC,KEY_CLINIC_ID + " =?",new String[]{String.valueOf(clinic.getC_id())});
+        Log.d("DELETE","CLINIC " + id);
+       db.delete(TABLE_CLINIC,KEY_CLINIC_ID + " =?",new String[]{String.valueOf(id)});
+
    }
 
     public void delete_medication(MEDICATION medication){
@@ -254,5 +276,44 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Global_Variables.setWarning_stock_id(records);
         return records;
     }
+    public String Clinic_UUID_GENERATOR(){
+        String uuid = UUID.randomUUID().toString();
+        return uuid;
+    }
 
+
+    public CLINIC get_clinic_by_uuid(String uuid){
+        db = sqlRead;
+        CLINIC clinic = new CLINIC();
+        String QUERY = "SELECT * from "+ TABLE_CLINIC +" where " +KEY_CLINIC_UUID + " = " + uuid;
+        Cursor cursor = db.rawQuery(QUERY,null);
+        try{
+            cursor.moveToFirst();
+            if (cursor != null && cursor.moveToFirst()) {
+                clinic.setC_id(cursor.getInt(0));
+                clinic.setC_name(cursor.getString(1));
+                clinic.setC_country(cursor.getString(2));
+                clinic.setC_uuid(cursor.getString(3));
+                cursor.close();
+            }}catch(Exception e){
+            Log.e("EXCEPTION", e.toString());
+        }
+        return clinic;
+    }
+    public MEDICATION get_medication_by_uuid(String uuid){
+        db = sqlRead;
+        MEDICATION medication = new MEDICATION();
+        Cursor cursor = db.query(TABLE_MEDS, new String[]{KEY_MEDS_ID,KEY_MEDS_NAME,KEY_MEDS_UUID},KEY_MEDS_UUID + "=?",new String[] {uuid},null,null,null);
+        if (cursor != null && cursor.moveToFirst()){
+            cursor.moveToFirst();
+
+            medication.setM_id(cursor.getInt(0));
+            medication.setM_name(cursor.getString(1));
+            medication.setM_uuid(cursor.getString(2));
+            cursor.close();}
+        return medication;
+    }
 }
+
+
+

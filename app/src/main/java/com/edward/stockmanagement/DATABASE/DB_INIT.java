@@ -117,7 +117,7 @@ public class DB_INIT {
         String country = "";
         Random r = new Random();
         int low = 0;
-        int high = 68;
+        int high = Global_Variables.getAfrican_Countries().length;
         int Result = r.nextInt(high-low) + low;
         String[] countries = Global_Variables.getAfrican_Countries();
         country = countries[Result];

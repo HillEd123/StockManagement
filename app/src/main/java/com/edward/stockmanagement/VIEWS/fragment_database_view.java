@@ -61,7 +61,7 @@ public class fragment_database_view extends Fragment {
                 low_stock_function();
             }
         });
-
+        full_data_view.callOnClick();
         return rootview;
     }
 

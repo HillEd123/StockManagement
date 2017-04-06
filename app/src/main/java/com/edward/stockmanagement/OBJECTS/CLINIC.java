@@ -9,14 +9,24 @@ public class CLINIC {
     private static int C_id;
     private static String C_name;
     private static String C_country;
+    private static String C_uuid;
 
 
     public CLINIC(){}
 
-    public CLINIC(int id, String name, String country){
+    public CLINIC(int id, String name, String country,String uuid){
         this.C_id = id;
         this.C_name  = name;
         this.C_country = country;
+        this.C_uuid = uuid;
+    }
+
+    public static String getC_uuid() {
+        return C_uuid;
+    }
+
+    public static void setC_uuid(String c_uuid) {
+        C_uuid = c_uuid;
     }
 
     public static int getC_id() {

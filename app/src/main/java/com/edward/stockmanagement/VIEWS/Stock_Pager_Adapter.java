@@ -24,9 +24,17 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
                 return new fragment_database_view();
 
             case 2:
-                //Edit Database
-                return new fragment_edit_stock();
-
+                //Edit Selection
+                return new fragment_edit_select();
+            case 3:
+                //Edit Stock
+                return new fragment_edit_stock_refactor();
+            case 4:
+                //Edit Clinics
+                return new fragment_edit_clinic();
+            case 5:
+                //Edit Medication
+                return new fragment_edit_medication();
 
         }
         return null;
@@ -34,6 +42,6 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 6;
     }
 }

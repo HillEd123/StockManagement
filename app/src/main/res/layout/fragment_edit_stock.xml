@@ -4,101 +4,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/clinic_edit_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/clinic_edit_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Clinic Name : " />
-
-                <EditText
-                    android:id="@+id/editText_clinic_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="50"
-                    android:inputType="text"
-                    android:text="Name" />
-
-                <Spinner
-                    android:id="@+id/spinner_country"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button_cancel_clinic_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel" />
-
-            <Button
-                android:id="@+id/button_submit_clinic_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Submit" />
-
-            <Button
-                android:id="@+id/button_add_clinic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/colorGreen"
-                android:text="Add"
-                android:textColor="@color/colorWhite" />
-
-            <Button
-                android:id="@+id/button_delete_clinic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/colorDelete"
-                android:text="DELETE"
-                android:textColor="@color/colorWhite" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/stock_edit_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,41 +53,4 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/edit_button_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/button_edit_stock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Edit Stock" />
-
-        <Button
-            android:id="@+id/button_edit_clinic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Edit Clinics" />
-
-        <Button
-            android:id="@+id/button_edit_medication"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Edit Medication" />
-
-        <Button
-            android:id="@+id/button_close_edit_window"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Close" />
-    </LinearLayout>
-
 </LinearLayout>
