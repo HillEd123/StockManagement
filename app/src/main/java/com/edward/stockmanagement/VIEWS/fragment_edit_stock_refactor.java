@@ -125,6 +125,15 @@ public class fragment_edit_stock_refactor extends Fragment {
         return rootview;
     }
 
-
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        data_list_items.clear();
+        int clinic_count = db.get_clinic_count();
+        for (int i = 1; i < clinic_count + 1;i++){
+            CLINIC clinic = db.get_clinic(i);
+            data_list_items.add(clinic.getC_name() + "     " + clinic.getC_country());
+        }
+        data_list_adapter.notifyDataSetChanged();
+    }
 }

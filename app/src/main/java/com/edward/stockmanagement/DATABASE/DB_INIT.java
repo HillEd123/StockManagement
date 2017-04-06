@@ -32,6 +32,7 @@ public class DB_INIT {
             String name = get_Clinic_Name(i);
             clinic.setC_name(name);
             clinic.setC_country(get_Random_Country());
+            clinic.setC_uuid(db.Clinic_UUID_GENERATOR());
             db.add_clinic(clinic);
             CLINIC c = db.get_clinic(i+1);
             Log.d("Clinic", c.getC_name()+ " " + c.getC_country());
@@ -41,12 +42,15 @@ public class DB_INIT {
 
         MEDICATION med1 = new MEDICATION();
         med1.setM_name("NEVIRAPINE");
+        med1.setM_uuid(db.Clinic_UUID_GENERATOR());
         db.add_medication(med1);
         MEDICATION med2 = new MEDICATION();
         med2.setM_name("STAVUDINE");
+        med2.setM_uuid(db.Clinic_UUID_GENERATOR());
         db.add_medication(med2);
         MEDICATION med3 = new MEDICATION();
         med3.setM_name("ZIDOTABINE");
+        med3.setM_uuid(db.Clinic_UUID_GENERATOR());
         db.add_medication(med3);
         MEDICATION t = db.get_medication(1);
         Log.d("Med 1 : ",""+ t.getM_name());
@@ -59,11 +63,15 @@ public class DB_INIT {
     private void Init_Stock(){
 
         for (int i = 0;i <10;i++){
+            CLINIC clinic = db.get_clinic(i+1);
             for (int k = 0;k < 3;k++){
+                MEDICATION medication = db.get_medication(k+1);
                 STOCK stock = new STOCK();
                 stock.setS_clinic(i+1);
                 stock.setS_medication(k+1);
                 stock.setS_stock_count(5);
+                stock.setS_clinic_uuid(clinic.getC_uuid());
+                stock.setS_medication_uuid(medication.getM_uuid());
                 db.add_stock(stock);
             }
         }

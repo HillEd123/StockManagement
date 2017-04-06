@@ -14,6 +14,8 @@ import com.edward.stockmanagement.OBJECTS.MEDICATION;
 import com.edward.stockmanagement.OBJECTS.STOCK;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,10 +74,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             KEY_STOCK_MEDICATION + " INTEGER, "+
             KEY_STOCK_CLINIC_UUID + " TEXT, " +
             KEY_STOCK_MEDICATION_UUID + " TEXT, " +
-            KEY_STOCK_COUNT + " INTEGER, " +
-
-            "FOREIGN KEY (" + KEY_STOCK_CLINIC_UUID + ") REFERENCES " + TABLE_CLINIC + "(" + KEY_CLINIC_UUID + ") ," +
-            "FOREIGN KEY (" + KEY_STOCK_MEDICATION_UUID + ") REFERENCES " + TABLE_MEDS + "(" + KEY_MEDS_UUID + ") "
+            KEY_STOCK_COUNT + " INTEGER "
             +")";
 
 
@@ -127,7 +126,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_STOCK,null,values);
     }
 
-    public CLINIC get_clinic(int id){
+    public CLINIC get_clinic(int id)
+    {
         db = sqlRead;
         CLINIC clinic = new CLINIC();
         Cursor cursor = db.query(TABLE_CLINIC, new String[]{KEY_CLINIC_ID,KEY_CLINIC_NAME,KEY_CLINIC_COUNTRY,KEY_CLINIC_UUID},KEY_CLINIC_ID + "=?",
@@ -142,6 +142,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         cursor.close();}
         return clinic;
     }
+
+
 
     public MEDICATION get_medication(int id){
         db = sqlRead;
@@ -205,18 +207,22 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 
        db = sqlWrite;
         Log.d("DELETE","CLINIC " + id);
-       db.delete(TABLE_CLINIC,KEY_CLINIC_ID + " =?",new String[]{String.valueOf(id)});
+
+
+       db.delete(TABLE_CLINIC,KEY_CLINIC_ID + " = ?",new String[]{String.valueOf(id)});
 
    }
 
+
+
     public void delete_medication(MEDICATION medication){
         db = sqlWrite;
-        db.delete(TABLE_MEDS,KEY_MEDS_ID + " =?",new String[]{String.valueOf(medication.getM_id())});
+        db.delete(TABLE_MEDS,KEY_MEDS_ID + " = ?",new String[]{String.valueOf(medication.getM_id())});
     }
 
     public void delete_stock(STOCK stock){
         db = sqlWrite;
-        db.delete(TABLE_STOCK,KEY_STOCK_ID + " =?",new String[]{String.valueOf(stock.getS_id())});
+        db.delete(TABLE_STOCK,KEY_STOCK_ID + " = ?",new String[]{String.valueOf(stock.getS_id())});
     }
 
     public int get_clinic_count(){
@@ -285,7 +291,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public CLINIC get_clinic_by_uuid(String uuid){
         db = sqlRead;
         CLINIC clinic = new CLINIC();
-        String QUERY = "SELECT * from "+ TABLE_CLINIC +" where " +KEY_CLINIC_UUID + " = " + uuid;
+        String QUERY = "SELECT * from "+ TABLE_CLINIC +" where " +KEY_CLINIC_UUID + " = '" + uuid+"'";
         Cursor cursor = db.rawQuery(QUERY,null);
         try{
             cursor.moveToFirst();
@@ -302,8 +308,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
     public MEDICATION get_medication_by_uuid(String uuid){
         db = sqlRead;
+
+
+
         MEDICATION medication = new MEDICATION();
-        Cursor cursor = db.query(TABLE_MEDS, new String[]{KEY_MEDS_ID,KEY_MEDS_NAME,KEY_MEDS_UUID},KEY_MEDS_UUID + "=?",new String[] {uuid},null,null,null);
+        String QUERY = "SELECT * from "+ TABLE_MEDS +" where " +KEY_MEDS_ID + " = '" + uuid+"'";
+        Cursor cursor = db.rawQuery(QUERY,null);
         if (cursor != null && cursor.moveToFirst()){
             cursor.moveToFirst();
 
