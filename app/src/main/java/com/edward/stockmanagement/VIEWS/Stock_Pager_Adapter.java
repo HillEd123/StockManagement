@@ -35,6 +35,8 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
             case 5:
                 //Edit Medication
                 return new fragment_edit_medication();
+            case 6:
+                return new fragment_about();
 
         }
         return null;
@@ -42,6 +44,6 @@ public class Stock_Pager_Adapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 6;
+        return 7;
     }
 }
