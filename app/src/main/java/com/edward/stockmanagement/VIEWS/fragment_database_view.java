@@ -29,7 +29,7 @@ public class fragment_database_view extends Fragment {
 
     private View rootview;
     private ListView data_list_view;
-
+    private DataBaseHandler db;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,9 +37,8 @@ public class fragment_database_view extends Fragment {
         data_list_view = (ListView)rootview.findViewById(R.id.listView_Database_view);
         data_list_items.clear();
         data_list_adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,data_list_items);
-        fulldata_function();
+        db = new DataBaseHandler(MainActivity.get_M_Context());
         data_list_view.setAdapter(data_list_adapter);
-
         Button close = (Button)rootview.findViewById(R.id.button_close_db_view);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,65 +50,52 @@ public class fragment_database_view extends Fragment {
         full_data_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fulldata_function();
+                show_full_database();
             }
         });
         Button low_stock_view = (Button)rootview.findViewById(R.id.button_low_stock);
         low_stock_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                low_stock_function();
+                show_low_stock_database();
             }
         });
         full_data_view.callOnClick();
+        show_full_database();
         return rootview;
     }
-
-    private void low_stock_function(){
-        DataBaseHandler db = new DataBaseHandler(MainActivity.get_M_Context());
-        int stock_count = db.get_stock_count();
+    
+    private void show_full_database(){
         data_list_items.clear();
-        int clinic_number = 0;
-
-        for (int i = 1; i < stock_count + 1;i++){
-            STOCK stock = db.get_stock(i);
-            if (stock.getS_stock_count() < 5 ){
-                if (clinic_number !=stock.getS_clinic() ){
-                    clinic_number = stock.getS_clinic();
-                    CLINIC clinic = db.get_clinic(stock.getS_clinic());
-                    String list_item_string = clinic.getC_name() + "    " + clinic.getC_country();
-                    int[] clinic_stock = db.clinic_record_set(stock.getS_clinic());
-                    for (int j = 0; j < clinic_stock.length;j++ ){
-                        STOCK stock1 = db.get_stock(clinic_stock[j]);
-                        MEDICATION medication = db.get_medication(stock1.getS_medication());
-                        list_item_string += "    "+ medication.getM_name() + "    " + stock1.getS_stock_count();
-                    }
-                    data_list_items.add(list_item_string);
-                }
+        int clinic_count = db.get_clinic_count();
+        for (int i = 1;i < clinic_count+1;i++){
+            CLINIC clinic = db.get_clinic(i);
+            int[] records = db.get_clinic_stock_records(clinic.getC_uuid());
+            String list_item_string = clinic.getC_name() + "    " + clinic.getC_country();
+            for (int j = 0;j < records.length;j++){
+                STOCK stock = db.get_stock(records[j]);
+                MEDICATION medication = db.get_medication(stock.getS_medication());
+                list_item_string += "    "+ medication.getM_name() + "    " + stock.getS_stock_count();
             }
+            data_list_items.add(list_item_string);
         }
         data_list_adapter.notifyDataSetChanged();
     }
-    private void fulldata_function(){
-        DataBaseHandler db = new DataBaseHandler(MainActivity.get_M_Context());
-        int stock_count = db.get_stock_count();
-        data_list_items.clear();
-        int clinic_number = 0;
-        for (int i = 1; i < stock_count + 1;i++){
-            STOCK stock = db.get_stock(i);
-            if (clinic_number != stock.getS_clinic()){
-                clinic_number = stock.getS_clinic();
-                int[] clinic_stock = db.clinic_record_set(stock.getS_clinic());
-                CLINIC clinic = db.get_clinic(stock.getS_clinic());
-                String list_item_string = clinic.getC_name() + "    " + clinic.getC_country();
-                for (int j = 0; j < clinic_stock.length;j++ ){
-                    STOCK stock1 = db.get_stock(clinic_stock[j]);
-                    MEDICATION medication = db.get_medication(stock1.getS_medication());
-                    list_item_string += "    "+ medication.getM_name() + "    " + stock1.getS_stock_count();
 
-                }
-                data_list_items.add(list_item_string);
+    private void show_low_stock_database(){
+        data_list_items.clear();
+        int clinic_count = db.get_clinic_count();
+        for (int i = 1;i < clinic_count+1;i++){
+            CLINIC clinic = db.get_clinic(i);
+            int[] records = db.get_clinic_stock_records(clinic.getC_uuid());
+            String list_item_string = clinic.getC_name() + "    " + clinic.getC_country();
+            for (int j = 0;j < records.length;j++){
+                STOCK stock = db.get_stock(records[j]);
+                MEDICATION medication = db.get_medication(stock.getS_medication());
+                if (stock.getS_stock_count() < 5){
+                list_item_string += "    "+ medication.getM_name() + "    " + stock.getS_stock_count();}
             }
+            data_list_items.add(list_item_string);
         }
         data_list_adapter.notifyDataSetChanged();
     }

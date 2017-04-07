@@ -282,6 +282,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         Global_Variables.setWarning_stock_id(records);
         return records;
     }
+
     public String Clinic_UUID_GENERATOR(){
         String uuid = UUID.randomUUID().toString();
         return uuid;
@@ -306,6 +307,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         }
         return clinic;
     }
+
     public MEDICATION get_medication_by_uuid(String uuid){
         db = sqlRead;
 
@@ -331,6 +333,32 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         int[] records = new int[0];
         int cursor_count = 0;
         Cursor cursor = db.rawQuery(Query_Clinic_Stock,new String[]{String.valueOf(uuid)});
+        if (cursor !=null){
+            records = new int[cursor.getCount()];
+            if (cursor.moveToFirst()){
+                do{
+                    records[cursor_count] = cursor.getInt(0);
+                    cursor_count++;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        for (int i = 0; i < records.length;i++) {
+
+            Log.d("CURSOR", String.valueOf(records[i]));
+
+        }
+        Global_Variables.setWarning_stock_id(records);
+        return records;
+    }
+
+    public int[] get_clinic_stock_records(String UUID){
+
+        String Query_Clinic_Stock = "SELECT * FROM " + TABLE_STOCK + " WHERE " + KEY_STOCK_CLINIC_UUID + "=?";
+        db = sqlRead;
+        int[] records = new int[0];
+        int cursor_count = 0;
+        Cursor cursor = db.rawQuery(Query_Clinic_Stock,new String[]{String.valueOf(UUID)});
         if (cursor !=null){
             records = new int[cursor.getCount()];
             if (cursor.moveToFirst()){
