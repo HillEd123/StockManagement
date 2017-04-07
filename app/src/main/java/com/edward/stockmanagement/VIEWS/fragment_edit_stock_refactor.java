@@ -36,14 +36,15 @@ public class fragment_edit_stock_refactor extends Fragment {
     private Button close_stock_editing ;
     private Button submit_update_stock ;
     private ListView clinic_list_view;
-    private ArrayList<String> data_list_items=new ArrayList<String>();
-    private ArrayAdapter<String> data_list_adapter;
+    public static ArrayList<String> data_list_items=new ArrayList<String>();
+    public static ArrayAdapter<String> data_list_adapter;
     private DataBaseHandler db;
     private int [] records;
     private LinearLayout stock_medication_edit_layout;
     private CLINIC selected_clinic;
     private int edit_text_count;
     @Override
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootview = inflater.inflate(R.layout.fragment_edit_stock,container,false);

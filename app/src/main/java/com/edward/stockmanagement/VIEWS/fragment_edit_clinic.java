@@ -165,11 +165,17 @@ public class fragment_edit_clinic extends Fragment {
                     clinic_edit_list_view_items.clear();
                     final int count = db.get_clinic_count();
                     Log.d("COUNT","COUNT : " + count);
+                    //Pager Adapter not playing along in SDK 16 so manual intervention needed
+                    fragment_edit_stock_refactor.data_list_items.clear();
                     for (int i = 1;i < count + 1;i++){
                         clinic = db.get_clinic(i);
                         clinic_edit_list_view_items.add(clinic.getC_name() + "    " + clinic.getC_country());
+                        //Update Stock Edit Page List
+                        fragment_edit_stock_refactor.data_list_items.add(clinic.getC_name() + "    " + clinic.getC_country());
                     }
                     clinic_edit_list_view_adapter.notifyDataSetChanged();
+                    //Update Stock Edit Page ListAdapter
+                    fragment_edit_stock_refactor.data_list_adapter.notifyDataSetChanged();
                     clinic_name_edit_text.setText("Name");
                     country_spinner.setSelection(1);
                     InputMethodManager inputManager =
@@ -303,12 +309,18 @@ public class fragment_edit_clinic extends Fragment {
         }
 
         clinic_edit_list_view_items.clear();
+        //Pager Adapter not playing along in SDK 16 so manual intervention needed
+        fragment_edit_stock_refactor.data_list_items.clear();
         final int count = db.get_clinic_count();
         Log.d("COUNT","COUNT : " + count);
         for (int i = 1;i < count + 1;i++){
             clinic = db.get_clinic(i);
             clinic_edit_list_view_items.add(clinic.getC_name() + "    " + clinic.getC_country());
+            //Update Stock Edit Page List
+            fragment_edit_stock_refactor.data_list_items.add(clinic.getC_name() + "    " + clinic.getC_country());
         }
         clinic_edit_list_view_adapter.notifyDataSetChanged();
+        //Update Stock Edit Page ListAdapter
+        fragment_edit_stock_refactor.data_list_adapter.notifyDataSetChanged();
     }
 }
