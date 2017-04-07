@@ -1,8 +1,10 @@
 package com.edward.stockmanagement.VIEWS;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,24 +188,18 @@ public class fragment_edit_clinic extends Fragment {
         delete_clinic_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clinic = db.get_clinic(selected_position +1);
-                CLINIC_OBJECT_ARRAYLIST new_clinic  = new CLINIC_OBJECT_ARRAYLIST(clinic.getC_id(),clinic.getC_name(),clinic.getC_country(),clinic.getC_uuid());
+                new AlertDialog.Builder(fragment_edit_clinic.this.getActivity())
+                        .setTitle("Title")
+                        .setMessage("Are you sure you would like to delete this Clinic? all stock items related to the clinic will also be removed!")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-               //  db.delete_clinic(new_clinic.getC_id());
-                CUSTOM_DATABASE_DELETE_FUNCTION(selected_position + 1);
-
-                clinic_edit_list_view_items.clear();
-                final int count = db.get_clinic_count();
-                Log.d("COUNT","COUNT : " + count);
-                for (int i = 1;i < count + 1;i++){
-                    clinic = db.get_clinic(i);
-                    clinic_edit_list_view_items.add(clinic.getC_name() + "    " + clinic.getC_country());
-                }
-                clinic_edit_list_view_adapter.notifyDataSetChanged();
-                clinic_name_edit_text.setText("Name");
-                country_spinner.setSelection(1);
-                clinic = null;
-            }
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                positive_delete_function();
+                                Toast.makeText(MainActivity.get_M_Context(), "Records Will be Deleted!", Toast.LENGTH_SHORT).show();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+                            }
         });
 
         cancel_clinic_button.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +212,26 @@ public class fragment_edit_clinic extends Fragment {
         return rootview;
     }
 
+    private void positive_delete_function(){
+        clinic = db.get_clinic(selected_position +1);
+        CLINIC_OBJECT_ARRAYLIST new_clinic  = new CLINIC_OBJECT_ARRAYLIST(clinic.getC_id(),clinic.getC_name(),clinic.getC_country(),clinic.getC_uuid());
+
+        //  db.delete_clinic(new_clinic.getC_id());
+        CUSTOM_DATABASE_DELETE_FUNCTION(selected_position + 1);
+
+        clinic_edit_list_view_items.clear();
+        final int count = db.get_clinic_count();
+        Log.d("COUNT","COUNT : " + count);
+        for (int i = 1;i < count + 1;i++){
+            clinic = db.get_clinic(i);
+            clinic_edit_list_view_items.add(clinic.getC_name() + "    " + clinic.getC_country());
+        }
+        clinic_edit_list_view_adapter.notifyDataSetChanged();
+        clinic_name_edit_text.setText("Name");
+        country_spinner.setSelection(1);
+        clinic = null;
+
+    }
     //////\\\\Delete Function for SQLite seems to be broken and I have sat with this problem for about 7 hours.
     //////\\\\ when deleting something it deletes the row, duplicates the previous row and throws away the last row.
     //////\\\\I hope this patch is not too nasty
@@ -224,11 +240,8 @@ public class fragment_edit_clinic extends Fragment {
         int clinic_count = db.get_clinic_count();
         for (int i = 0; i < clinic_count;i++){
             CLINIC clinic = db.get_clinic(i+1);
-            CLINIC_OBJECT_ARRAYLIST new_clinic  = new CLINIC_OBJECT_ARRAYLIST(clinic.getC_id(),clinic.getC_name(),clinic.getC_country(),clinic.getC_uuid());
-//            new_clinic.setC_id(clinic.getC_id());
-//            new_clinic.setC_name(clinic.getC_name());
-//            new_clinic.setC_country(clinic.getC_country());
-//            new_clinic.setC_uuid(clinic.getC_uuid());
+            CLINIC_OBJECT_ARRAYLIST new_clinic  = new CLINIC_OBJECT_ARRAYLIST(clinic.getC_id(),
+                    clinic.getC_name(),clinic.getC_country(),clinic.getC_uuid());
             Log.d("ARRAY_CLINIC","ARRAY : " + clinic.getC_id());
             Log.d("ARRAY_CLINIC","ARRAY : " + clinic.getC_name());
             if (new_clinic.getC_id() != position){
@@ -237,10 +250,12 @@ public class fragment_edit_clinic extends Fragment {
         records = db.clinic_record_set(position);
         ArrayList<STOCK_OBJECT_ARRAY_LIST> stockArrayList = new ArrayList<>();
         int stock_count = db.get_stock_count();
-        int [] test = {0,2,4,6,8,10};
+
         for (int i = 0;i < stock_count;i++){
             STOCK stock = db.get_stock(i+1);
-            STOCK_OBJECT_ARRAY_LIST stock_object_array_list = new STOCK_OBJECT_ARRAY_LIST(stock.getS_id(),stock.getS_clinic(),stock.getS_medication(),stock.getS_clinic_uuid(),stock.getS_medication_uuid(),stock.getS_stock_count());
+            STOCK_OBJECT_ARRAY_LIST stock_object_array_list = new STOCK_OBJECT_ARRAY_LIST(stock.getS_id(),
+                    stock.getS_clinic(),stock.getS_medication(),stock.getS_clinic_uuid(),
+                    stock.getS_medication_uuid(),stock.getS_stock_count());
 
             boolean test_records = false;
             for (int j = 0; j < records.length;j++){

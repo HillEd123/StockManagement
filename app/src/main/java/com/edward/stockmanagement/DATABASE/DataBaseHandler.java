@@ -323,6 +323,32 @@ public class DataBaseHandler extends SQLiteOpenHelper {
             cursor.close();}
         return medication;
     }
+
+    public int[] medication_record_set(String uuid){
+
+        String Query_Clinic_Stock = "SELECT * FROM " + TABLE_STOCK + " WHERE " + KEY_STOCK_MEDICATION_UUID + "=?";
+        db = sqlRead;
+        int[] records = new int[0];
+        int cursor_count = 0;
+        Cursor cursor = db.rawQuery(Query_Clinic_Stock,new String[]{String.valueOf(uuid)});
+        if (cursor !=null){
+            records = new int[cursor.getCount()];
+            if (cursor.moveToFirst()){
+                do{
+                    records[cursor_count] = cursor.getInt(0);
+                    cursor_count++;
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        for (int i = 0; i < records.length;i++) {
+
+            Log.d("CURSOR", String.valueOf(records[i]));
+
+        }
+        Global_Variables.setWarning_stock_id(records);
+        return records;
+    }
 }
 
 
