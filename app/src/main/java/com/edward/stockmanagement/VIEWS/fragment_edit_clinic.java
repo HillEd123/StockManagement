@@ -189,7 +189,7 @@ public class fragment_edit_clinic extends Fragment {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(fragment_edit_clinic.this.getActivity())
-                        .setTitle("Title")
+                        .setTitle("Delete Clinic")
                         .setMessage("Are you sure you would like to delete this Clinic? all stock items related to the clinic will also be removed!")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

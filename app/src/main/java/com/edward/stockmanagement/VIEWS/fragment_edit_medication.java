@@ -124,7 +124,7 @@ public class fragment_edit_medication extends Fragment {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(fragment_edit_medication.this.getActivity())
-                        .setTitle("Title")
+                        .setTitle("Delete Medication")
                         .setMessage("Are you sure you would like to delete this medication? doing so will remove all Stock items related to Clinics!")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
