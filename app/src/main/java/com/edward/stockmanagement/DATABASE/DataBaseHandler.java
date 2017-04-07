@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -14,9 +13,6 @@ import com.edward.stockmanagement.OBJECTS.MEDICATION;
 import com.edward.stockmanagement.OBJECTS.STOCK;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**

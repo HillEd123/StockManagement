@@ -10,8 +10,6 @@ import com.edward.stockmanagement.OBJECTS.STOCK;
 
 import java.util.Random;
 
-import javax.microedition.khronos.opengles.GL;
-
 /**
  * Created by Edward on 2017/04/04.
  */
