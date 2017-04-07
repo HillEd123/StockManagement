@@ -1,6 +1,7 @@
 package com.edward.stockmanagement.Controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.edward.stockmanagement.DATABASE.DB_INIT;
 import com.edward.stockmanagement.DATABASE.DataBaseHandler;
@@ -33,12 +35,13 @@ import com.edward.stockmanagement.VIEWS.warning_item_view_dialog;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.RunnableFuture;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    private static boolean report_ready = false;
     public static Context m_Context;
     private Handler app_handler = new Handler();
     private Runnable stock_mTimer;
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+           // super.onBackPressed();
+            Setpage(0);
         }
     }
 
@@ -110,11 +114,12 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            return true;
+            Setpage(6);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -129,7 +134,37 @@ public class MainActivity extends AppCompatActivity
             Setpage(2);
 
         }  else if (id == R.id.nav_send) {
+            if (report_ready){
 
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Low Stock in Clinics");
+                db = new DataBaseHandler(get_M_Context());
+                int stock_count = db.get_stock_count();
+
+                String message = "";
+                for (int i = 0; i < stock_count;i++){
+                    STOCK stock = db.get_stock(i + 1);
+                    if (stock.getS_stock_count() < 5 ){
+                        CLINIC clinic = db.get_clinic(stock.getS_clinic());
+                        MEDICATION medication = db.get_medication(stock.getS_medication());
+                        message += clinic.getC_name() + " is low on " + medication.getM_name() + " stock left : " + stock.getS_stock_count() + " \n";
+
+
+                        Log.d("MESSAGE", message);
+                        report_ready = true;
+                    }
+                    intent.putExtra(Intent.EXTRA_TEXT, message + " ");
+                }
+
+
+                startActivity(Intent.createChooser(intent, "Send Email"));
+            }
+            else{
+                Toast.makeText(MainActivity.get_M_Context(),"No Items in the Stock Database is low",Toast.LENGTH_LONG).show();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -167,25 +202,13 @@ public class MainActivity extends AppCompatActivity
                 warning_list_array[warning_count] = stock.getS_id();
                 warning_count++;
                 Log.d("MESSAGE", message);
+                report_ready = true;
             }
-
-//TODO FIX ON ITEM CLICK LISTNER BY ADDING INDEX IN LIST TO CORRECT DB ENRTRY
-//            warnings_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                    db = new DataBaseHandler(get_M_Context());
-//                    STOCK stock1 =  db.get_stock(i+1);
-//                    Global_Variables.setWarning_stock(stock1);
-//                    int[] db_test = db.clinic_record_set(stock1.getS_clinic());
-//                    warning_item_view_dialog warning_dialog = new warning_item_view_dialog();
-//                    warning_dialog.show(fragmentManager,String.valueOf(stock1.getS_clinic()));
-//
-//                }
-//            });
         }
         if (warnings_list_items.size() == 0){
             String message = "No Stock Issues";
             warnings_list_items.add(message);
+            report_ready = false;
         }
         warnings_list_adapter.notifyDataSetChanged();
         db.close();
